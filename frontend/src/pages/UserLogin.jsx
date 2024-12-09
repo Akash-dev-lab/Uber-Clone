@@ -1,5 +1,7 @@
-import React, {useState, useEffect} from 'react'
-import { Link } from 'react-router-dom'
+import React, {useState, useContext} from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { UserDataContext } from '../context/UserContext'
 
 const UserLogin = () => {
 
@@ -7,24 +9,39 @@ const UserLogin = () => {
   const [password, setPassword] = useState('');
   const [userData, setUserData] = useState({});
   const [firstRender, setFirstRender] = useState(true);
-  const submitHandler = (e) => {
+
+  const navigate = useNavigate()
+
+  const {user, setUser} = useContext(UserDataContext)
+
+  const submitHandler = async (e) => {
     e.preventDefault()
-    setEmail('')
-    setPassword('')
-    setUserData({
+    const userData = {
       email: email,
       password: password,
-    })
+    }
+
+    setEmail('')
+    setPassword('')
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
+
+    if(response.status === 200) {
+      const data = response.data
+      setUser(data.user)
+      localStorage.setItem('token', data.token)
+      navigate('/home')
+    }
   }
 
   // Flag to detect the First Render
-  useEffect(() => {
-    if (!firstRender) {
-      console.log(userData);
-    } else {
-      setFirstRender(false);
-    }
-  }, [userData]);
+  // useEffect(() => {
+  //   if (!firstRender) {
+  //     console.log(userData);
+  //   } else {
+  //     setFirstRender(false);
+  //   }
+  // }, [userData]);
 
   return (
     <div className='p-7 flex flex-col justify-between h-screen'>
