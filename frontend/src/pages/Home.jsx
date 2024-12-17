@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react';
 import 'remixicon/fonts/remixicon.css'
@@ -104,15 +104,15 @@ const Home = () => {
       <img className='w-16 absolute left-5 top-5' src="https://imgs.search.brave.com/FZq7YFqzVbkjhipVXmxfaZY-RmPwy3wsG0WV1UdM8bs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9sb2dv/cy13b3JsZC5uZXQv/d3AtY29udGVudC91/cGxvYWRzLzIwMjAv/MDUvVWJlci1Mb2dv/LTcwMHgzOTQucG5n" alt="" />
 
       <div className='h-screen w-screen'>
-        {/* image for temporary use */}
-        <img className='h-full w-full object-cover' src="https://imgs.search.brave.com/l8sLLdkDsvVFWzgRdEe-fc0abwC84riS4P3ebsS9sZg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS12ZWN0/b3IvbWFwLWdwcy1u/YXZpZ2F0aW9uLWNp/dHktc3RyZWV0LW1h/cC13aXRoLXBpbnMt/cm91dGUtZGFzaGJv/YXJkLWFwcC1yb3V0/ZS1uYXZpZ2F0b3Jf/MTY1MTQzLTEwNzIu/anBnP3NpemU9NjI2/JmV4dD1qcGc" alt="" />
+        {/* image for temporary use */}<img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" />
+        
       </div>
 
       <div className='flex flex-col justify-end h-screen absolute top-0 w-full'>
         <div className='h-[30%] p-5 bg-white relative'>
           <h5 ref={panelCloseRef} onClick={() => {
             setPanelOpen(false)
-          }} className='absolute opacity-0 right-6 top-6'><i class="ri-arrow-down-wide-line"></i></h5>
+          }} className='absolute opacity-0 right-6 top-6'><i className="ri-arrow-down-wide-line"></i></h5>
           <h4 className='text-2xl font-semibold'>Find a trip</h4>
           <form onSubmit={(e) => {
             submitHandler(e)
@@ -149,7 +149,7 @@ const Home = () => {
       </div>
 
       <div ref={waitingForDriverRef} className='fixed w-full z-10 bg-white bottom-0 px-3 py-6 pt-12'>
-        <WaitingForDriver waitingForDriverPanel={waitingForDriverPanel} />
+        <WaitingForDriver waitingForDriverPanel={waitingForDriverPanel} setWaitingForDriverPanel={setWaitingForDriverPanel} />
       </div>
     </div>
   )
