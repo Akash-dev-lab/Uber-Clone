@@ -53,9 +53,4 @@ const FinishRide = (props) => {
     )
 }
 
-// ConfirmRidePopUp.propTypes = {
-//     setRidePopupPanel: PropTypes.func.isRequired, // Validate `setRidePopupPanel` as a required function
-//     setConfirmRidePopupPanel: PropTypes.func.isRequired
-// };
-
 export default FinishRide
