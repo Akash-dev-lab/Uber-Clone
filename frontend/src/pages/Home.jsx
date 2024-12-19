@@ -7,6 +7,7 @@ import VehiclePanel from '../components/VehiclePanel';
 import ConfirmedRide from '../components/ConfirmedRide';
 import LookingForDriver from '../components/LookingForDriver';
 import WaitingForDriver from '../components/WaitingForDriver';
+import axios from 'axios'
 
 const Home = () => {
 
@@ -23,6 +24,43 @@ const Home = () => {
   const [confirmRidePanel, setConfirmRidePanel] = useState(false)
   const [lookingForDriverPanel, setLookingForDriverPanel] = useState(false)
   const [waitingForDriverPanel, setWaitingForDriverPanel] = useState(false)
+  const [pickupSuggestions, setPickupSuggestions] = useState([])
+  const [destinationSuggestions, setDestinationSuggestions] = useState([])
+  const [activeField, setActiveField] = useState(null)
+
+  const handlePickupChange = async (e) => {
+    console.log(e)
+    setPickup(e.target.value)
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
+        params: { input: e.target.value },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+
+      })
+    
+      setPickupSuggestions(response.data)
+    } catch {
+      // handle error
+    }
+  }
+
+  const handleDestinationChange = async (e) => {
+    setDestination(e.target.value)
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
+        params: { input: e.target.value },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      setDestinationSuggestions(response.data)
+    } catch {
+      // handle error
+    }
+  }
+
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -105,7 +143,7 @@ const Home = () => {
 
       <div className='h-screen w-screen'>
         {/* image for temporary use */}<img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" />
-        
+
       </div>
 
       <div className='flex flex-col justify-end h-screen absolute top-0 w-full'>
@@ -120,19 +158,21 @@ const Home = () => {
             <div className="line h-16 w-1 bg-gray-700 rounded-full top-[45%] left-10 absolute"></div>
             <input onClick={() => {
               setPanelOpen(true)
-            }} value={pickup} onChange={(e) => {
-              setPickup(e.target.value)
-            }} className='bg-[#eeeeee] px-12 py-2 text-base rounded-lg w-full mt-5' type="text" placeholder='Add a pick-up location' />
+              setActiveField('pickup')
+            }} value={pickup} onChange={handlePickupChange} className='bg-[#eeeeee] px-12 py-2 text-base rounded-lg w-full mt-5' type="text" placeholder='Add a pick-up location' />
             <input onClick={() => {
               setPanelOpen(true)
-            }} value={destination} onChange={(e) => {
-              setDestination(e.target.value)
-            }} className='bg-[#eeeeee] px-12 py-2 text-base rounded-lg w-full mt-3' type="text" placeholder='Enter your destination' />
+              setActiveField('destination')
+            }} value={destination} onChange={handleDestinationChange} className='bg-[#eeeeee] px-12 py-2 text-base rounded-lg w-full mt-3' type="text" placeholder='Enter your destination' />
           </form>
         </div>
 
         <div ref={panelRef} className='h-0 bg-white'>
-          <LocationSearchPanel setPanelOpen={setPanelOpen} setVehiclePanel={setVehiclePanel} />
+          <LocationSearchPanel setPanelOpen={setPanelOpen} setVehiclePanel={setVehiclePanel}
+            suggestions={activeField === 'pickup' ? pickupSuggestions : destinationSuggestions}
+            setPickup={setPickup}
+            setDestination={setDestination}
+            activeField={activeField} />
         </div>
       </div>
 

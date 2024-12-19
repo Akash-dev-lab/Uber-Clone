@@ -1,7 +1,6 @@
-import React from 'react'
 
 const WaitingForDriver = (props) => {
-    console.log(props)
+    
     return (
         <div>
             <h5 onClick={() => {
@@ -29,14 +28,14 @@ const WaitingForDriver = (props) => {
                         </div>
                     </div>
                     <div className='flex items-center gap-5 p-3 border-b-2'>
-                        <i class="ri-crosshair-fill"></i>
+                        <i className="ri-crosshair-fill"></i>
                         <div>
                             <h3 className='text-lg font-medium'>Third Wave Coffee</h3>
                             <p className='text-sm -mt-1 text-gray-600'>17th Cross Rd, PWD Quarters, 1st Sector, HSR Layout, Bengaluru, Karnatak</p>
                         </div>
                     </div>
                     <div className='flex items-center gap-5 p-3'>
-                        <i class="ri-cash-line"></i>
+                        <i className="ri-cash-line"></i>
                         <div>
                             <h3 className='text-lg font-medium'>193.20</h3>
                             <p className='text-sm -mt-1 text-gray-600'>Cash Cash</p>
