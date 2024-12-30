@@ -38,6 +38,8 @@ console.log(distanceTime)
     return fare;
 }
 
+module.exports.getFare = getFare
+
 function getOtp(num) {
     function generateOtp(num) {
         const otp = crypto.randomInt(Math.pow(10, num - 1), Math.pow(10, num)).toString()
@@ -52,8 +54,6 @@ module.exports.createRide = async ({ user, pickup, destination, vehicleType }) =
     }
     const fare = await getFare(pickup, destination)
 
-    console.log(fare)
-
     const ride = rideModel.create({
         user,
         pickup,
@@ -61,5 +61,27 @@ module.exports.createRide = async ({ user, pickup, destination, vehicleType }) =
         otp: getOtp(6),
         fare: fare[vehicleType]
     })
+    return ride
+}
+
+module.exports.confirmRide = async ({rideId}) => {
+    
+    if (!rideId) {
+        throw new Error('Ride Id is required')
+    }
+
+    await rideModel.findOneAndUpdate({
+        _id: rideId
+    }, {
+        status: 'confirmed',
+        captain: captain._id
+    })
+
+    const ride = await rideModel.findOne({ _id: ride }).populate('user')
+
+    if (!ride) {
+        throw new Error('Ride not found')
+    }
+
     return ride
 }

@@ -25,7 +25,7 @@ const captainSchema = new mongoose.Schema({
         required: true,
         select: false,
     },
-    sockedId: {
+    socketId: {
         type: String,
     },
 
@@ -55,17 +55,26 @@ const captainSchema = new mongoose.Schema({
             type: String,
             required: true,
             enum: ['car', 'motorcycle', 'auto']
+        }
+    },
+
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true,
+            default: 'Point'
         },
-        location: {
-            lat: {
-                type: Number,
-            },
-            lang: {
-                type: Number,
-            }
+        coordinates: {
+            type: [Number],
+            required: true,
+            default: [0, 0]
         }
     }
 })
+
+// Create a 2dsphere index on the location field
+captainSchema.index({ location: '2dsphere' });
 
 captainSchema.methods.generateAuthToken = function () {
     const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {expiresIn: '24h'})

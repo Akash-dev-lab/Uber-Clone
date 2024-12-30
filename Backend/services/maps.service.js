@@ -1,27 +1,33 @@
 const axios = require('axios')
+const captainModel = require('../models/captain.model')
 
-module.exports.getAddressCoordinate = async (address) => {
+module.exports.getAddressCoordinate = async (address) => {  
     const apiKey = process.env.GOOGLE_MAPS_API
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`
 
     try {
 
-        const response = await axios.get(url)
-        console.log(response)
+        console.log('Fetching coordinates for address:', address);
+        const response = await axios.get(url) 
             
         if (response.data.status === 'OK') {
             const location = response.data.results[0].geometry.location;
-            return {
-                lat: location.lat,
-                lng: location.lng
+            console.log('Extracted location:', location);
+            if (location && typeof location.lat === 'number' && typeof location.lng === 'number') {
+                return {
+                    ltd: location.lat,
+                    lng: location.lng
+                };
             }
-        } else {
-            throw new Error('Unable to fetch coordinates')
         }
+            throw new Error(`Unable to get coordinates for address: ${address}`)
     } catch (error) {
 
-        console.error('Error fetching coordinates:', error.message);
-        throw error;
+        console.error('Detailed error in getAddressCoordinate:', error);
+        if (error.response) {
+            console.error('API Error Response:', error.response.data);
+        }
+        throw new Error(`Failed to get coordinates: ${error.message}`);
     }
 }
 
@@ -83,3 +89,19 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
         throw err
     }
 }
+
+module.exports.getCaptainInTheRadius = async (latitude, longitude, radius) => {
+    try {
+        const captains = await captainModel.find({
+            location: {
+                $geoWithin: {
+                    $centerSphere: [[longitude, latitude], radius / 3963.2] // radius in miles
+                }
+            }
+        });
+        return captains;
+    } catch (err) {
+        console.error(err);
+        throw new Error('Error finding captains in the radius');
+    }
+};
